@@ -1,6 +1,9 @@
 // index.js
 // where your node app starts
-
+var getTime = (unixTimeStamp) => {
+  dateObj = new Date(unixTimeStamp)
+  return dateObj.toUTCString();
+}
 // init project
 var express = require('express');
 var app = express();
@@ -30,3 +33,30 @@ app.get("/api/hello", function (req, res) {
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+app.get('/api', (req,res) => {
+  
+  res.json({
+    unix: new Date().getTime(),
+    utc: new Date().toUTCString()
+  })
+})
+
+app.get('/api/:date', (req, res) => {
+  let date = req.params.date
+  let dateTime = new Date(Number(date))
+  
+  if (dateTime.toString() !== "Invalid Date"){
+    return res.json({
+      unix: Number(date),
+      utc: dateTime.toUTCString()
+    })
+  }
+  res.json({
+    error: "Invalid Date"
+  })
+  
+})
+
+
+
